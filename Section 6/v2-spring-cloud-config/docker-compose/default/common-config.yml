@@ -1,0 +1,29 @@
+services:
+    network-deploy-service:
+      networks:
+        - ranju9707
+    #Whenever microservice is created within the Docker compose file,
+    #it will extend the microservice-base-config
+    microservice-base-config:
+      extends:
+        service: network-deploy-service
+      deploy:
+        resources:
+          limits:
+            memory: 700m
+      environment:
+        #This is the name of the service which is created in docker-compose.yml
+        SPRING_RABBITMQ_HOST: "rabbit"
+    microservice-configserver-config:
+      extends:
+        service: microservice-base-config
+      depends_on:
+        configserver:
+          condition: service_healthy
+      environment:
+        SPRING_PROFILES_ACTIVE: default
+        # The hostname given here should not be localhost but the service name which tells how account
+        # micorservice can connect with config server.
+        # Inside this docker we have a service name for config server i.e. configserver.
+        # The prefix should be always configserver.
+        SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"

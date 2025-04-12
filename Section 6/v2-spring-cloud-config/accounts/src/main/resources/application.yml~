@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: "accounts"
+  profiles:
+    active: "qa"
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverName: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+     ddl-auto: update
+    show-sql: true
+  config:
+    import: "optional:configserver:http://localhost:8071/" #Here the configserver tells that the microservice or Spring Boot application needs to
+    # connect to the config server. The optional tells that if the config server is not available, the application should not fail and run.
+    # If properties are super important then remove optional.
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+#Bydefault Actuator will run on expose all the management related API path. Thus, we need to enable them
+#using a property
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # * means expose all management api. It include refresh related endpoint
+
+
+server:
+  port: 9001

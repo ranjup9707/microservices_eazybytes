@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: "configserver"
+  profiles:
+    #active: native #Used for classpath and file system
+    active: git
+  cloud:
+    config:
+      server:
+        # native:
+           #search-locations: "classpath:/config/" #config is the folder name
+           #search-locations: "file:///C://Ranju//Workspace//2025//Microservices//config" #reading from file system
+        git:
+          uri: "https://github.com/ranjup9707/microservices-properties.git"
+          default-label: main #Branch name
+          timeout: 5 #Wait for 5 seconds
+          clone-on-start: true #Clone repository to local system on startup
+          force-pull: true #Always pull latest changes
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
+# When GitHub sents a web hook request to the mointor API, the config server will use the Spring Cloud Bus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  # Telling actuator to enable the health related information
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  # To read the health information using endpoints
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+encrypt:
+  key: "45D81EC1EF61DF9AD8D3E5BB397F9"
+
+server:
+  port: 8071
