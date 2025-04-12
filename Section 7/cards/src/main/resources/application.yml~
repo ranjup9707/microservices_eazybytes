@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: "cards"
+  profiles:
+    active: "prod"
+  datasource:
+    url: jdbc:mysql://localhost:3317/cardsdb
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    # Execute the script schema.sql before starting the application
+  sql:
+    init:
+      mode: always
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+#Bydefault Actuator will run on expose all the management related API path. Thus, we need to enable them
+#using a property
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  port: 9002
