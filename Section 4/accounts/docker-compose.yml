@@ -1,0 +1,38 @@
+services:
+    accounts:
+      image: "ranju9707/accounts:s4" #image_name:tag_name
+      container_name: accounts-ms #This avoids giving random name to the container when it is created by image
+      ports:
+        - "9001:9001" #if multiple port is to be allocated then can add one more using ex. "3001:3001"
+      deploy:
+        resources:
+          limits:
+            memory: 700m #700MB memory
+      networks:
+        - ranju9707 #This can be any name
+    cards:
+      image: "ranju9707/cards:s4"
+      container_name: cards-ms
+      ports:
+        - "9002:9002"
+      deploy:
+        resources:
+          limits:
+            memory: 700m
+      networks:
+        - ranju9707
+    loans:
+      image: "ranju9707/loans:s4"
+      container_name: loans-ms
+      ports:
+        - "9003:9003"
+      deploy:
+        resources:
+          limits:
+            memory: 700m
+      networks:
+        - ranju9707
+networks:
+  ranju9707:
+    driver: bridge
+
