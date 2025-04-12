@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: "gatewayserver"
+  # Established a connection between Gateway Server and Config Server
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  #Leverage the information present in the discovery agent (Eureka Server) to forward all the request coming from
+  #the external clients
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true #Accept service name in lowercase.
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  # To enable the gateway related endpoint in actuator
+  endpoint:
+    gateway:
+      enabled: true
+
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "gatewayserver"
+    description: "Eazy Bank Gateway Server Application"
+    version: "1.0.0"
+
+# Whatever logger statement is seen in the package com.eazybytes.gatewayserver
+# please print them if it of type "DEBUG"
+logging:
+  level:
+    com:
+      eazybytes:
+        gatewayserver: DEBUG
+
+#Circuit Breaker Properties
+resilience4j.circuitbreaker:
+  config:
+    default:
+      slidingWindowSize: 10 # The number of request to be observed before changing the state from CLOSED to OPEN
+      permittedNumberOfCallsInHalfOpenState: 2 # Allows circuit breaker to request in half open status and based
+      # how these 2 requests are processed, the circuit breaker can move to OPEN state or CLOSE state
+      failureRateThreshold: 50 # If the failure rate is more than 50% then the circuit breaker will move to OPEN state
+      # from CLOSED state
+      waitDurationInOpenState: 10000 # Circuit Breaker will wait 10 secs whenever it moves to HALF OPEN state
