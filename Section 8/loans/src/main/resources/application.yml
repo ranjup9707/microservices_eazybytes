@@ -1,0 +1,51 @@
+server:
+  port: 9003
+spring:
+  profiles:
+    active: "prod"
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  application:
+    name: loans
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+
+eureka:
+  instance:
+    # When accounts ms is registering with Eureka Server by default it will register with the hostname
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+#These details will be seen in Eureka Dashboard
+info:
+  app:
+    name: "loans"
+    description: "Easy Bank Cards Application"
+    version: "1.0.0"
