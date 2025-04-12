@@ -1,0 +1,71 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: "accounts"
+  profiles:
+    active: "prod"
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverName: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+     ddl-auto: update
+    show-sql: true
+  config:
+    import: "optional:configserver:http://localhost:8071/" #Here the configserver tells that the microservice or Spring Boot application needs to
+    # connect to the config server. The optional tells that if the config server is not available, the application should not fail and run.
+    # If properties are super important then remove optional.
+
+#Bydefault Actuator will run on expose all the management related API path. Thus, we need to enable them
+#using a property
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # * means expose all management api. It include refresh related endpoint
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  # To enable info related Actuator URL
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+
+#Add properties for Eureka
+eureka:
+  instance:
+    # When accounts ms is registering with Eureka Server by default it will register with the hostname
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+#These details will be seen in Eureka Dashboard
+info:
+  app:
+    name: "accounts"
+    description: "Easy Bank Accounts Application"
+    version: "1.0.0"
+
+logging:
+  level:
+    com:
+      eazybytes:
+        accounts: DEBUG

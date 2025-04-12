@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: "gatewayserver"
+  # Established a connection between Gateway Server and Config Server
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  #Leverage the information present in the discovery agent (Eureka Server) to forward all the request coming from
+  #the external clients
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true #Accept service name in lowercase.
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  # To enable the gateway related endpoint in actuator
+  endpoint:
+    gateway:
+      enabled: true
+
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "gatewayserver"
+    description: "Eazy Bank Gateway Server Application"
+    version: "1.0.0"
+
+# Whatever logger statement is seen in the package com.eazybytes.gatewayserver
+# please print them if it of type "DEBUG"
+logging:
+  level:
+    com:
+      eazybytes:
+        gatewayserver: DEBUG
